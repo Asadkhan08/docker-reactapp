@@ -9,9 +9,10 @@ RUN npm install
 
 COPY . .
 
-run npm run build
+RUN npm cache clean --force && npm install --verbose
 
-FRON nginx
+
+FROM nginx
 
 COPY --from=builder /usr/app/build /usr/share/nginx/html
 
