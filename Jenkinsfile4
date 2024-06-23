@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        PRODUCTION_SERVER = '16.171.249.150'  // Replace with your production server address
+        SSH_CREDENTIALS = credentials('ssh-key-credentials')  // Replace with your SSH key credential ID
+        
+        // Define Docker image tag dynamically
+        DOCKER_IMAGE_TAG = "asadkhan08/fullstackproject:16-alpine-${env.BUILD_NUMBER}-${env.BUILD_ID.replace('-', '').take(8)}"
+        PROD_DOCKER_IMAGE = "asadkhan08/fullstackproject:16-alpine-${env.BUILD_NUMBER}-${env.BUILD_ID.replace('-', '').take(8)}"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE_TAG} -f Dockerfile.test ."
+                }
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    script {
+                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
+                    }
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    sh "docker push ${DOCKER_IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                script {
+                    sshagent(['ssh-key-credentials']) {
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker pull ${PROD_DOCKER_IMAGE}'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker stop my-production-container || true'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker rm my-production-container || true'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker run -d --name my-production-container ${PROD_DOCKER_IMAGE}'"
+                    }
+                }
+            }
+        }
+    }
+}
+
