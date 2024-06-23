@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh 'docker build -t $DOCKER_IMAGE -f Dockerfile.test .'
+                }
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_USR | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    sh 'docker push $DOCKER_IMAGE'
+                }
+            }
+        }
+    }
+}
+
