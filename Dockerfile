@@ -9,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm cache clean --force && npm install --verbose
-
+#RUN npm cache clean --force && npm install --verbose
+RUN npm run build 
 
 FROM nginx
 

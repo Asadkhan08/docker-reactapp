@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
-        PRODUCTION_SERVER = '16.171.249.150'  // Replace with your production server address
+        PRODUCTION_SERVER = '13.53.177.226'  // Replace with your production server address
         SSH_CREDENTIALS = credentials('ssh-key-credentials')  // Replace with your SSH key credential ID
         
         // Define Docker image tag dynamically
@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE_TAG} -f Dockerfile.test ."
+                    sh "docker build -t ${DOCKER_IMAGE_TAG} -f Dockerfile.dev ."
                 }
             }
         }
@@ -45,7 +45,7 @@ pipeline {
                         sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker pull ${PROD_DOCKER_IMAGE}'"
                         sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker stop my-production-container || true'"
                         sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker rm my-production-container || true'"
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker run -d --name my-production-container ${PROD_DOCKER_IMAGE}'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} 'docker run -d --name my-production-container -p 80:80  ${PROD_DOCKER_IMAGE}'"
                     }
                 }
             }
