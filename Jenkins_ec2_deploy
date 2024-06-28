@@ -28,22 +28,19 @@ pipeline {
             }
         }
 
-        stage('Deploy to Production') {
-            steps {
-                withCredentials([file(credentialsId: 'pem-key-credential', variable: 'PEM_KEY')]) {
-                    script {
-                        sh """
-                        ssh -i \$PEM_KEY -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} '
-                        docker pull ${DOCKER_IMAGE} &&
-                        docker stop my-production-container || true &&
-                        docker rm my-production-container || true &&
-                        docker run -d --name my-production-container -p 80:80 ${DOCKER_IMAGE}
-                        '
-                        """
-                    }
-                }
-            }
-        }
+        withCredentials([file(credentialsId: 'pem-key-credential', variable: 'PEM_KEY')]) {
+    script {
+        sh """
+        ssh -i \$PEM_KEY -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} '
+        docker pull ${DOCKER_IMAGE} &&
+        docker stop my-production-container || true &&
+        docker rm my-production-container || true &&
+        docker run -d --name my-production-container -p 80:80 ${DOCKER_IMAGE}
+        '
+        """
+    }
+}
+
     }
 
     post {
