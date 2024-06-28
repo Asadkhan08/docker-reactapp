@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'
-        PRODUCTION_SERVER = '16.171.249.150'  // Replace with your production server address
+        PRODUCTION_SERVER = '172.21.92.21'  // Replace with your production server address
         SSH_CREDENTIALS = credentials('ssh-key-credentials')  // Replace with your SSH key credential ID
         PROD_DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'  // Replace with your production Docker image name and tag
     }
