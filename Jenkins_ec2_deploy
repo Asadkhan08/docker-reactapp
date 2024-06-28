@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'
@@ -8,9 +7,8 @@ pipeline {
         SSH_CREDENTIALS = credentials('ssh-key-credentials')  // Replace with your SSH key credential ID
         //#PROD_DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'  // Replace with your production Docker image name and tag
     }
-
-    
-        stage('Login to Docker Hub') {
+stages{
+         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
@@ -19,8 +17,6 @@ pipeline {
                 }
             }
         }
-
-    
         stage('Deploy to Production') {
             steps {
                 script {
@@ -35,3 +31,4 @@ pipeline {
         }
     }
 
+}
