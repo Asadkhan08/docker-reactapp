@@ -30,7 +30,7 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                withCredentials([file(credentialsId: '${PEM_KEY_CREDENTIAL}', variable: 'PEM_KEY')]) {
+                withCredentials([file(credentialsId: 'docker-server-key.pem', variable: 'PEM_KEY')]) {
                     script {
                         sh """
                         ssh -i \$PEM_KEY -o StrictHostKeyChecking=no ubuntu@${PRODUCTION_SERVER} '
