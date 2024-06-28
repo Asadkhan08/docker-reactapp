@@ -19,9 +19,7 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-            when {
-                branch 'master'  // Example condition: Only push on the master branch
-            }
+          
             steps {
                 script {
                     // Step 2: Push Docker image to Docker Hub
