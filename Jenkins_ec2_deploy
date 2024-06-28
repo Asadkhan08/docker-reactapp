@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'
         PRODUCTION_SERVER = '13.60.22.176'  // Replace with your production server address
         SSH_CREDENTIALS = credentials('ssh-key-credentials')  // Replace with your SSH key credential ID
-        #PROD_DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'  // Replace with your production Docker image name and tag
+        //#PROD_DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'  // Replace with your production Docker image name and tag
     }
 
     
