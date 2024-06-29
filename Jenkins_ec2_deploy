@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE = 'asadkhan08/fullstackproject:16-alpine'
-        PRODUCTION_SERVER = '13.60.22.176'  // Replace with your production server address
+        PRODUCTION_SERVER = '51.20.193.161'  // Replace with your production server address
         PEM_KEY_CREDENTIAL = 'docker-server-key'  // ID of your .pem key credential
     }
 
